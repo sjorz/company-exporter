@@ -19,8 +19,6 @@ START=`date +%s`
 
 cd $HOME
 
-[ -s $LOG ] && mv $LOG $LOG.bak
-
 #
 #	Start the actual export script, results to $OUT_FULE
 #
