@@ -186,7 +186,7 @@ function main($logFile, $reportFile)
 	Logger::open ($logFile, $lvl);
 
 	info ("*****************************");
-	info ("Start compana profile  export");
+	info ("Start company profile  export");
 	info ("*****************************");
 
 	global $utf8_errors;
@@ -201,7 +201,7 @@ function main($logFile, $reportFile)
 	}
 
 	reportAppend ("Company profile export SUMMARY:\n");
-	reportAppend (sprintf ("Processed %d transactions", $n));
+	reportAppend (sprintf ("Processed %d profiles", $n));
 	reportAppend (sprintf ("There were %d UTF8 Conversion errors\n",
 			count($utf8_errors)));
 	reportWrite ($reportFile);

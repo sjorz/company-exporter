@@ -24,7 +24,6 @@ cd $HOME
 #
 
 php company-exporter/company-export.php $LOG $REPORT > $OUT_FILE
-cp -p $OUT_FILE $OUT_FILE.bak
 
 # at now + "$STARTAT" minutes  2>/dev/null <<EOC
 #  $SCRIPT auto >$RUNDIR/exporter.out

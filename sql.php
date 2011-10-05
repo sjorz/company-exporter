@@ -20,7 +20,7 @@ function getSqlForProfiles()
 	Company.URL as website, Company.CompanyID as legacy_company_id, Company.CompanyName as trading_name
 	from Profiles
 	left outer join Member on Member.MemberID=Profiles.intOwnerID
-	left outer join Company on Member.MemberID=Company.MemberID
+	inner join Company on Member.MemberID=Company.MemberID
 	order by intProfileId";
 }
 
