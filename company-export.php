@@ -163,9 +163,9 @@ function process ()
             $row ['title'] = toUTF8 ($row ['title']);
             $row ['referral_code'] = toUTF8 ($row ['referral_code']);
 
-	    $profileId = $row ['legacy_profile_id'];
-	    info (sprintf ("Profile %d", $profileId));
-	    echo toJson ($profileId, $row), "\n";
+	    $title = $row ['title'];
+	    info (sprintf ("Profile %d", $title));
+	    echo toJson ($row['legacy_company_id'], $row), "\n";
 //print_r($row);
 	}
 	

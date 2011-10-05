@@ -1,0 +1,6 @@
+log/*
+*.out
+company-export.json
+company-export.*.json
+company-export.*.json.*
+*.sample

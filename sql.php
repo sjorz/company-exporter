@@ -7,15 +7,21 @@ function imageFolder()
 
 function getSqlForProfiles()
 {
-	return "
-		select intProfileID as legacy_profile_id,intOwnerID as owner, 
-		(select top 1 ReferralCode.referralCode from [Order] 
-		left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) as referral_code,
-		IntroTitle as title,MarketingMsg as description,ProfileEmail as email,
+    return "select
+	    (select top 1 ReferralCode.referralCode from [Order] 
+	    	left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
+	    	where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) as referral_code,
+	IntroTitle as title,
+	MarketingMsg as description,
+	ProfileEmail as email,
 	DateCreated as created_at,
 	(select top 1 Path from  LogosAndImages where OwnerID=Profiles.intOwnerID) as banner,
-	(select top 1 Path from  LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo
-	from Profiles order by legacy_profile_id";
+	(select top 1 Path from  LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo,
+	Company.URL as website, Company.CompanyID as legacy_company_id, Company.CompanyName as trading_name
+	from Profiles
+	left outer join Member on Member.MemberID=Profiles.intOwnerID
+	left outer join Company on Member.MemberID=Company.MemberID
+	order by intProfileId";
 }
 
 function getSqlForPhotos($pid)
