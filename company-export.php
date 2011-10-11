@@ -159,13 +159,13 @@ function process ()
 
 	foreach ($rows as $row)
 	{
-            $row ['description'] = toUTF8 ($row ['description']);
-            $row ['title'] = toUTF8 ($row ['title']);
+            $row ['profile_description'] = toUTF8 ($row ['profile_description']);
+            $row ['profile_title'] = toUTF8 ($row ['profile_title']);
             $row ['referral_code'] = toUTF8 ($row ['referral_code']);
 
-	    $title = $row ['title'];
-	    info (sprintf ("Profile %d", $title));
-	    echo toJson ($row['legacy_company_id'], $row), "\n";
+	    $cid = $row['legacy_company_id'];
+	    info (sprintf ("Profile for company %d - %s", $cid, $row['trading_name']));
+	    echo toJson ($cid, $row), "\n";
 //print_r($row);
 	}
 	
@@ -181,8 +181,8 @@ function process ()
 
 function main($logFile, $reportFile)
 {
-	//$lvl = Logger::$DEBUG;
-	$lvl = Logger::$ERROR;
+	$lvl = Logger::$DEBUG;
+	//$lvl = Logger::$ERROR;
 	Logger::open ($logFile, $lvl);
 
 	info ("*****************************");

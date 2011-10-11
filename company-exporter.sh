@@ -20,7 +20,7 @@ START=`date +%s`
 cd $HOME
 
 #
-#	Start the actual export script, results to $OUT_FULE
+#	Start the actual export script, results to $OUT_FILE
 #
 
 php company-exporter/company-export.php $LOG $REPORT > $OUT_FILE
