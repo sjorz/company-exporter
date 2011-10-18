@@ -1,0 +1,92 @@
+#!/bin/bash
+#set -x
+
+OWNER=rent
+SCRIPT=/data/company-exporter/current/company-exporter.sh
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+NAME='Company Exporter'
+
+LOCK_FILE=/tmp/comp_exporter.lock
+RUN_FILE=/tmp/comp_exporter.run
+PIDFILE=/var/run/company-exporter.pid
+Q=`atq | grep 'c rent' | wc -l`
+
+
+case "$1" in
+	  start_development)
+			export IMPORT_ENVIRONMENT="development"
+			${0} xx_start
+		;;
+
+	  start_staging)
+			${0} export IMPORT_ENVIRONMENT="development"
+			xx_start
+		;;
+
+	  start_production)
+			${0} export IMPORT_ENVIRONMENT="development"
+			xx_start
+		;;
+
+    xx_start)
+
+    if [ $Q -gt 0 ]
+	  then
+	    echo $NAME already active or waiting to stop
+	    exit
+	  fi
+
+    if [ -z $IMPORT_ENVIRONMENT ]
+    then
+	      echo "Usage: /etc/init.d/$NAME {start_(development|staging|production)|stop|restart|force}" >&2
+		  exit
+		fi
+
+		if [ -f $LOCK_FILE ]
+		then
+	   		echo "$NAME still busy"
+	   		exit
+		fi
+
+		echo "Starting $NAME in $IMPORT_ENVIRONMENT mode.. "
+		touch $RUN_FILE
+		[ -f $LOCK_FILE ] && rm -f $LOCK_FILE
+
+    touch $PIDFILE
+    chown $OWNER:$OWNER $PIDFILE
+
+   	if start-stop-daemon --start --quiet --umask 0000 --chuid $OWNER:$OWNER --pidfile $PIDFILE --exec $SCRIPT -- $IMPORT_ENVIRONMENT&
+   	then
+        echo Started
+   	else
+        echo "failed"
+   	fi
+
+	;;
+    stop)
+	echo -n "Stopping $NAME: "
+	rm $RUN_FILE
+	echo "$NAME stopped"
+	rm -f $PIDFILE
+	;;
+
+    restart)
+	${0} stop
+	${0} start
+	;;
+
+    force)
+	${0} stop
+	rm -f $LOCK_FILE
+	rm -f $RUN _FILE
+	${0} start
+	;;
+  *)
+	echo "Usage: /etc/init.d/$NAME {start_(development|staging|production)|stop|restart|force}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
