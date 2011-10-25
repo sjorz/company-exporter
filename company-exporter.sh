@@ -8,10 +8,10 @@ STAMP=`date +%Y-%m-%d_%H.%M.%S`
 HOME=/data
 SITE=$HOME/rent/current
 RUNDIR=$HOME/company-exporter/current
-LOGDIR=$HOME/company-exporter/shared/log
-SCRIPT=$RUNDIR/exporter.sh
-LOG=$LOGDIR/export.$STAMP.log
-REPORT=$LOGDIR/export.$STAMP.report
+LOGDIR=$HOME/shared/log
+SCRIPT=$RUNDIR/company-exporter.sh
+LOG=$LOGDIR/company-export.log
+REPORT=$LOGDIR/company-export.report
 IMPORT_ENVIRONMENT=$1
 LOCK_FILE=/tmp/exporter.lock
 RUN_FILE=/tmp/exporter.run
@@ -24,12 +24,11 @@ START=`date +%s`
 #	Start the actual export script, results to $OUT_FILE
 #
 
-echo $LOG
 php $RUNDIR/company-export.php $LOG $REPORT > $OUT_FILE
 
 cd $SITE/script
 
-./start-company-import-development.sh $OUT_FILE
+./start-company-import-development.sh $OUT_FILE $LOG
 
 #
 # Use 'at' to schedule the nex execution. Use the 'c' queue instead of the

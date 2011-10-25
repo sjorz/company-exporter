@@ -67,10 +67,10 @@ class Logger
             self::$level = $lvl;
     }
 
-    private function pfx ()
+    public function pfx ()
     {
         $dt = new DateTime ('now', new DateTimeZone ('Australia/Perth'));
-        return ($dt->format ('dMy H:i:s') . ': ');
+        return ($dt->format ('dMy H:i:s'));
     }
 
     private function log ($msg)

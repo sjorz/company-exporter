@@ -39,6 +39,11 @@ function info ($msg)
     Logger::logInfo ($msg);
 }
 
+function stamped ($msg)
+{
+    return Logger::pfx() . $msg;
+}
+
 //**********************************************************************
 //
 //  Reporting
@@ -57,7 +62,7 @@ function reportWrite ($fn)
     global $report;
     $res = false;
 
-    if ($fp = fopen ($fn, "w+"))
+    if ($fp = fopen ($fn, "a+"))
     {
         $res = fputs ($fp, $report);
 		fclose ($fp);
@@ -169,7 +174,6 @@ function process ()
 //print_r($row);
 	}
 	
-	info (sprintf ("[%d] rows processed", count($rows)));
 	return count($rows);
 }	
 
@@ -186,7 +190,7 @@ function main($logFile, $reportFile)
 	Logger::open ($logFile, $lvl);
 
 	info ("*****************************");
-	info ("Start company profile  export");
+	info ("Start company profile export");
 	info ("*****************************");
 
 	global $utf8_errors;
@@ -200,13 +204,14 @@ function main($logFile, $reportFile)
 			info (sprintf("%d", $s));
 	}
 
-	reportAppend ("Company profile export SUMMARY:\n");
+	reportAppend ("==================================================");
+	reportAppend (stamped (" Company profile export SUMMARY:"));
 	reportAppend (sprintf ("Processed %d profiles", $n));
-	reportAppend (sprintf ("There were %d UTF8 Conversion errors\n",
-			count($utf8_errors)));
+	reportAppend (sprintf ("There were %d UTF8 Conversion errors", count($utf8_errors)));
+	reportAppend ("==================================================\n");
 	reportWrite ($reportFile);
 
-	info ("Company profile export script complete");
+	info (sprintf ("Company profile exporter finished - [%d] rows exported", $n));
 }
 
 if (isset ($argv[1]))
