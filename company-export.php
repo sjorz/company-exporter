@@ -65,11 +65,11 @@ function reportWrite ($fn)
     if ($fp = fopen ($fn, "a+"))
     {
         $res = fputs ($fp, $report);
-		fclose ($fp);
-        chmod ($fn, 0666);
-		if ($res)
+				fclose ($fp);
+        //chmod ($fn, 0666);
+				if ($res)
         	info ('Report written');
-		else
+				else
         	error ('Could not write report');
     }
     return $res;
@@ -187,7 +187,11 @@ function main($logFile, $reportFile)
 {
 	$lvl = Logger::$DEBUG;
 	//$lvl = Logger::$ERROR;
-	Logger::open ($logFile, $lvl);
+ 	if (!Logger::open ($logFile, $lvl))
+	{
+		echo "Cannot open log file [", $logFile, "]\n";
+		exit;
+  }
 
 	info ("*****************************");
 	info ("Start company profile export");

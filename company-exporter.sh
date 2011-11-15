@@ -16,7 +16,7 @@ IMPORT_ENVIRONMENT=$1
 LOCK_FILE=/tmp/exporter.lock
 RUN_FILE=/tmp/exporter.run
 
-OUT_FILE=$RUNDIR/company-export.$STAMP.json
+OUT_FILE=$LOGDIR/company-export.$STAMP.json
 
 START=`date +%s`
 
@@ -25,7 +25,6 @@ START=`date +%s`
 #
 
 php $RUNDIR/company-export.php $LOG $REPORT > $OUT_FILE
-
 cd $SITE/script
 
 ./start-company-import-development.sh $OUT_FILE $LOG

@@ -38,13 +38,13 @@ class Table
           $user = "rentLive";
       		$pwd = "Consult23";
 
-          //$ds = "Rent_Staging";
-					//$user = "rent_staging";
-					//$pwd = "GreenFish123";
+          $ds = "Rent_Staging";
+					$user = "rent_staging";
+					$pwd = "GreenFish123";
 
-					//$ds = "RentTst";
-					//$user = "sa";
-					//$pwd = "abc123";
+					$ds = "RentTst";
+					$user = "sa";
+					$pwd = "abc123";
 
             $this->dataSource = $ds;
             $this->tableName = $n;

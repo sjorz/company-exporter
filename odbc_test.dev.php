@@ -15,9 +15,9 @@
   $user = "rentLive";
   $pwd = "Consult23";
 
-  //$dsn = "RentTst";
-  //$user = "sa";
-  //$pwd = "abc123";
+  $dsn = "RentTst";
+  $user = "sa";
+  $pwd = "abc123";
 
   printf ("Connecting to [%s] as [%s][%s]...\n", $dsn, $user, $pwd);
 
