@@ -27,7 +27,7 @@ START=`date +%s`
 php $RUNDIR/company-export.php $LOG $REPORT > $OUT_FILE
 cd $SITE/script
 
-./start-company-import-development.sh $OUT_FILE $LOG
+./start-company-import-$IMPORT_ENVIRONMENT.sh $OUT_FILE $LOG
 
 #
 # Use 'at' to schedule the nex execution. Use the 'c' queue instead of the
