@@ -21,13 +21,13 @@ case "$1" in
 		;;
 
 	  start_staging)
-			${0} export IMPORT_ENVIRONMENT="staging"
-			xx_start
+			export IMPORT_ENVIRONMENT="staging"
+			${0} xx_start
 		;;
 
 	  start_production)
-			${0} export IMPORT_ENVIRONMENT="production"
-			xx_start
+			export IMPORT_ENVIRONMENT="production"
+			${0} xx_start
 		;;
 
     xx_start)
