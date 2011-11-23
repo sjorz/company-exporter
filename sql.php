@@ -2,7 +2,7 @@
 
 function imageFolder()
 {
-	return '\/Images\/images_agents1\/';
+	return '/Images/images_agents1/';
 }
 
 function getSqlForProfiles()
@@ -14,7 +14,7 @@ function getSqlForProfiles()
 	(select top 1 Path from  LogosAndImages where OwnerID=Profiles.intOwnerID) as banner,
 	*/
 
-    return "select
+    return sprintf ("select
 			Company.CompanyID as legacy_company_id,
 			Company.URL as website,
 			Company.LicenseNo as trading_name,
@@ -23,11 +23,19 @@ function getSqlForProfiles()
 	    	where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) as referral_code,
 	IntroTitle as profile_title,
 	MarketingMsg as profile_description,
-	(select top 1 Path from  LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo_url
+	'%s' + (select top 1 Path from  LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo_url
 	from Profiles
 	left outer join Member on Member.MemberID=Profiles.intOwnerID
 	inner join Company on Member.MemberID=Company.MemberID
-	order by Company.CompanyID";
+	order by Company.CompanyID", imageFolder());
+}
+
+function getSqlForPropertyManagers($companyId)
+{
+		return sprintf ("select Person.Email as email_address,Person.FirstName as first_name,Person.Surname as last_name, Person.Visible as visible, Company.CompanyID as legacy_company_id from CompanyContact 
+			join Person on Person.PersonID=CompanyContact.PersonID
+			join Company on Company.CompanyID=CompanyContact.CompanyID
+			where company.CompanyID=%d", $companyId);
 }
 
 function getSqlForPhotos($pid)

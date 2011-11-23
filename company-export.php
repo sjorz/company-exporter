@@ -2,7 +2,7 @@
 
 //**********************************************************************
 //
-//	Comp[any exporter main script. Sets up connection and runs the
+//	Company exporter main script. Sets up connection and runs the
 //	required SQLs. Outputs Jason objects to stdout for piping through
 //	to new DB processor.
 //
@@ -149,7 +149,7 @@ function toUTF8($v)
 //
 //**********************************************************************
 
-function process ()
+function process()
 {
 	$profileTable = new Table ('dbo.Profiles',
             array ('legacy_profile_id',), 'intProfileId');
@@ -158,22 +158,35 @@ function process ()
 	$profileTable->executeSQL($sql);
 	//$rows = $profileTable->asRows();
 	$rows = $profileTable->asArray();
-	unset ($profileTable);
 
 	// Preparing the JSON object
 
+	$n = 1;
 	foreach ($rows as $row)
 	{
-            $row ['profile_description'] = toUTF8 ($row ['profile_description']);
-            $row ['profile_title'] = toUTF8 ($row ['profile_title']);
-            $row ['referral_code'] = toUTF8 ($row ['referral_code']);
+      $row ['profile_description'] = toUTF8 ($row ['profile_description']);
+      $row ['profile_title'] = toUTF8 ($row ['profile_title']);
+      $row ['referral_code'] = toUTF8 ($row ['referral_code']);
+			$cid = $row['legacy_company_id'];
 
-	    $cid = $row['legacy_company_id'];
 	    info (sprintf ("Profile for company %d - %s", $cid, $row['trading_name']));
-	    echo toJson ($cid, $row), "\n";
+			echo toJson ($cid, $row);
+			$sql = getSqlForPropertyManagers($cid);
+			$profileTable->executeSQL($sql);
+			$pmRows = $profileTable->asArray();
+	    info (sprintf ("Property managers for company %d - %s:", $cid, $row['trading_name']));
+			foreach ($pmRows as $pmRow)
+			{
+				echo "\n", toJson ($cid, $pmRow);
+				info (sprintf ("- %s %s (%s)",
+						$pmRow['first_name'], $pmRow['last_name'], $pmRow['email_address']));
+			}
+			echo "\n";
+
 //print_r($row);
 	}
 	
+	unset ($profileTable);
 	return count($rows);
 }	
 
@@ -185,8 +198,8 @@ function process ()
 
 function main($logFile, $reportFile)
 {
-	$lvl = Logger::$DEBUG;
-	//$lvl = Logger::$ERROR;
+	//$lvl = Logger::$DEBUG;
+	$lvl = Logger::$ERROR;
  	if (!Logger::open ($logFile, $lvl))
 	{
 		echo "Cannot open log file [", $logFile, "]\n";
