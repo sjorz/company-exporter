@@ -148,6 +148,17 @@ function toUTF8($v)
 
 //**********************************************************************
 //
+//  Prefix photo url with path if not null
+//
+//**********************************************************************
+
+function prefixPhotoPath($v)
+{
+	return (strlen ($v) > 0) ?  imageFolder() . $v : $v;
+}
+
+//**********************************************************************
+//
 //  Process companies
 //
 //**********************************************************************
@@ -173,6 +184,7 @@ function process()
       $row ['profile_description'] = toUTF8 ($row ['profile_description']);
       $row ['profile_title'] = toUTF8 ($row ['profile_title']);
       $row ['referral_code'] = toUTF8 ($row ['referral_code']);
+			$row ['profile_photo_url'] = prefixPhotoPath ($row ['profile_photo_url']);
 			$cid = $row['legacy_company_id'];
 
 	    info (sprintf ("Profile for company %d - %s", $cid, $row['trading_name']));

@@ -7,14 +7,7 @@ function imageFolder()
 
 function getSqlForProfiles()
 {
-	/* Discarded:
-
-	person.Email as email_address,
-	DateCreated as created_at,
-	(select top 1 Path from  LogosAndImages where OwnerID=Profiles.intOwnerID) as banner,
-	*/
-
-    return sprintf ("select
+    return "select
 			Company.CompanyID as legacy_company_id,
 			Company.URL as website,
 			Company.LicenseNo as trading_name,
@@ -23,21 +16,15 @@ function getSqlForProfiles()
 	    	where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) as referral_code,
 	IntroTitle as profile_title,
 	MarketingMsg as profile_description,
-	'%s' + (select top 1 Path from  LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo_url
+	(select top 1 Path from LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo_url
 	from Profiles
 	left outer join Member on Member.MemberID=Profiles.intOwnerID
 	inner join Company on Member.MemberID=Company.MemberID
-	order by Company.CompanyID", imageFolder());
+	order by Company.CompanyID";
 }
 
 function getSqlForPropertyManagers($companyId)
 {
-/*
-		return sprintf ("select Person.Email as email_address,Person.FirstName as first_name,Person.Surname as last_name, Person.Visible as visible, Company.CompanyID as legacy_company_id from CompanyContact 
-			join Person on Person.PersonID=CompanyContact.PersonID
-			join Company on Company.CompanyID=CompanyContact.CompanyID
-			where company.CompanyID=%d", $companyId);
-*/
 		return sprintf ("select
 			Person.Email as email_address,
 			Person.FirstName as first_name,
@@ -45,7 +32,9 @@ function getSqlForPropertyManagers($companyId)
 			Person.Fax as fax, 
 			Person.Mobile as mobile_phone, 
 			Person.BusPhone as phone_number, 
-			Person.Visible as visible, '/Images/images_agents1/' + cast(Member.ContactImageId as varchar(250)) as photo, Company.CompanyID as legacy_company_id from CompanyContact
+			Person.Visible as visible,
+			CAST(CASE WHEN Member.ContactImageId IS NULL THEN NULL ELSE  '/Images/images_agents1/' + CAST(Member.ContactImageId AS varchar(250)) END AS varchar(500)) AS photo,
+		 	Company.CompanyID as legacy_company_id from CompanyContact
 			join Person on Person.PersonID=CompanyContact.PersonID
 			join Company on Company.CompanyID=CompanyContact.CompanyID
 			join Member on Member.MemberID=Person.MemberID
