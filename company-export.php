@@ -18,6 +18,9 @@ require_once "sql.php";
 $utf8_errors = array();
 $report = '';
 
+$nContacts = 0;
+$nCompanies = 0;
+
 //**********************************************************************
 //
 //  Some helpers.
@@ -151,6 +154,9 @@ function toUTF8($v)
 
 function process()
 {
+	global $nCompanies;
+	global $nContacts;
+
 	$profileTable = new Table ('dbo.Profiles',
             array ('legacy_profile_id',), 'intProfileId');
 
@@ -161,9 +167,9 @@ function process()
 
 	// Preparing the JSON object
 
-	$n = 1;
 	foreach ($rows as $row)
 	{
+			$nCompanies++;
       $row ['profile_description'] = toUTF8 ($row ['profile_description']);
       $row ['profile_title'] = toUTF8 ($row ['profile_title']);
       $row ['referral_code'] = toUTF8 ($row ['referral_code']);
@@ -177,6 +183,7 @@ function process()
 	    info (sprintf ("Property managers for company %d - %s:", $cid, $row['trading_name']));
 			foreach ($pmRows as $pmRow)
 			{
+				$nContacts++;
 				echo "\n", toJson ($cid, $pmRow);
 				info (sprintf ("- %s %s (%s)",
 						$pmRow['first_name'], $pmRow['last_name'], $pmRow['email_address']));
@@ -198,6 +205,9 @@ function process()
 
 function main($logFile, $reportFile)
 {
+	global $nCompanies;
+	global $nContacts;
+
 	//$lvl = Logger::$DEBUG;
 	$lvl = Logger::$ERROR;
  	if (!Logger::open ($logFile, $lvl))
@@ -212,7 +222,7 @@ function main($logFile, $reportFile)
 
 	global $utf8_errors;
 
-	$n = process();
+	process();
 
 	if (count($utf8_errors) > 0)
 	{
@@ -223,12 +233,15 @@ function main($logFile, $reportFile)
 
 	reportAppend ("==================================================");
 	reportAppend (stamped (" Company profile export SUMMARY:"));
-	reportAppend (sprintf ("Processed %d profiles", $n));
+	reportAppend (sprintf ("Exported %d profiles", $nCompanies));
+	reportAppend (sprintf ("Exported %d contacts", $nContacts));
 	reportAppend (sprintf ("There were %d UTF8 Conversion errors", count($utf8_errors)));
 	reportAppend ("==================================================\n");
 	reportWrite ($reportFile);
 
-	info (sprintf ("Company profile exporter finished - [%d] rows exported", $n));
+	info (sprintf ("Company profile exporter finished"));
+	info (sprintf ("- [%d] companies exported", $nCompanies));
+	info (sprintf ("- [%d] contacts exported", $nContacts));
 }
 
 if (isset ($argv[1]))

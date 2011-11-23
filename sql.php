@@ -32,9 +32,23 @@ function getSqlForProfiles()
 
 function getSqlForPropertyManagers($companyId)
 {
+/*
 		return sprintf ("select Person.Email as email_address,Person.FirstName as first_name,Person.Surname as last_name, Person.Visible as visible, Company.CompanyID as legacy_company_id from CompanyContact 
 			join Person on Person.PersonID=CompanyContact.PersonID
 			join Company on Company.CompanyID=CompanyContact.CompanyID
+			where company.CompanyID=%d", $companyId);
+*/
+		return sprintf ("select
+			Person.Email as email_address,
+			Person.FirstName as first_name,
+			Person.Surname as last_name, 
+			Person.Fax as fax, 
+			Person.Mobile as mobile_phone, 
+			Person.BusPhone as phone_number, 
+			Person.Visible as visible, '/Images/images_agents1/' + cast(Member.ContactImageId as varchar(250)) as photo, Company.CompanyID as legacy_company_id from CompanyContact
+			join Person on Person.PersonID=CompanyContact.PersonID
+			join Company on Company.CompanyID=CompanyContact.CompanyID
+			join Member on Member.MemberID=Person.MemberID
 			where company.CompanyID=%d", $companyId);
 }
 
