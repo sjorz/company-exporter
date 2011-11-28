@@ -181,7 +181,7 @@ function process()
 	foreach ($rows as $row)
 	{
 			$nCompanies++;
-      $row ['profile_description'] = toUTF8 ($row ['profile_description']);
+			$row ['profile_description'] = toUTF8 ($row ['profile_description']);
       $row ['profile_title'] = toUTF8 ($row ['profile_title']);
       $row ['referral_code'] = toUTF8 ($row ['referral_code']);
 			$row ['profile_photo_url'] = prefixPhotoPath ($row ['profile_photo_url']);
