@@ -73,7 +73,6 @@ class Table
     private function error ($msg)
     {
         Logger::logError ($msg);
-        exit ($this->__toString() . ': ' . $msg);
     }
 
     //**********************************************************************
