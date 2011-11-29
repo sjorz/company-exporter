@@ -11,7 +11,7 @@ default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
 set :scm, :git
-set :repository,  "git@github.com:roo/company-exporter.git"
+set :repository,  "git@github.com:sjorz/company-exporter.git"
 set :deploy_to, "/data/company-exporter"
 set :deploy_via, :remote_cache
 
