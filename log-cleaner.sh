@@ -14,10 +14,19 @@ HOME=/data
 LOGDIR=$HOME/shared/log
 LOG=$LOGDIR/company-export.log
 REPORT=$LOGDIR/company-export.report
+LOGMAINTREP=$LOGDIR/log_maintenance_report
 
 # echo $YESTERDAY
 # echo $LOG
 # echo $REPORT
+
+echo `date` "Cleaning $LOG" >> $LOGMAINTREP
+
+if [ -f $LOG.$YESTERDAY ]
+then
+	  echo `date` "File $LOG.$YESTERDAY already exists - skipped cleaning this time" >> $LOGMAINTREP
+		  exit
+		fi
 
 cp -p $LOG $LOG.$YESTERDAY
 cp -p $REPORT $REPORT.$YESTERDAY
