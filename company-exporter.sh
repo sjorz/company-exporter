@@ -41,7 +41,7 @@ STARTAT=`expr $STARTAT / 60`      	# Seconds -> minutes
 STARTAT=`expr $STARTAT + 1`     		# Add 1 minute for rounding
 [ $STARTAT -lt 0 ] && STARTAT=1     # Minimum is 1 min, cant be < 0
 
-at now + "$STARTAT" minutes -q c 2>/dev/null <<EOC
-	$SCRIPT auto >$RUNDIR/exporter.out
+	at now + "$STARTAT" minutes -q c 2>/dev/null <<EOC
+	$SCRIPT $IMPORT_ENVIRONMENT auto >$RUNDIR/exporter.out
 EOC
 

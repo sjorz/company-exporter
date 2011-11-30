@@ -43,7 +43,7 @@ class OdbcConnection
 
     private function error ($msg)
     {
-        exit ($this->__toString() . ': ' . $msg);
+        Logger::logError ($this->__toString() . ': ' . $msg);
     }
 
     //**********************************************************************
