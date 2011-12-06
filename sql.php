@@ -7,23 +7,45 @@ function imageFolder()
 
 function getSqlForProfiles()
 {
-	return "select
-		Company.CompanyID as legacy_company_id,
-		Company.URL as website,
-		Company.LicenseNo as trading_name,
-		Company.AdvertisingByline as byline,
-		(select top 1 ReferralCode.referralCode from [Order]
-		left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
-		where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) as referral_code,
-		IntroTitle as profile_title,
-		CONVERT(TEXT,MarketingMsg) as profile_description,
-		(select top 1 Path from LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo_url
-		from Profiles
-		join Company on Company.CompanyID=Profiles.intOwnerID
-		where (select top 1 ReferralCode.referralCode from [Order]
-		left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
-		where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) is not null
-		order by Company.CompanyID";
+	return "
+		select
+		  Company.CompanyID as legacy_company_id,
+			Company.URL as website,
+			Company.LicenseNo as trading_name,
+			Company.AdvertisingByline as byline,
+			(select top 1 ReferralCode.referralCode from [Order]
+			left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
+			where [Order].intOrderID=Company.OrderID order by dteDate desc) as referral_code,
+			IntroTitle as profile_title,
+			CONVERT(TEXT,MarketingMsg) as profile_description,
+			(select top 1 Path from LogosAndImages where OwnerID=Profiles.intProfileID and LogosAndImages.ImageType=104) as profile_photo_url
+			from Profiles
+			join Company on Company.CompanyID=Profiles.intOwnerID
+			where (select top 1 ReferralCode.referralCode from [Order]
+			left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
+			where [Order].intOrderID=Company.OrderID order by dteDate desc) is not null and
+			(select top 1 ReferralCode.referralCode from [Order]
+			left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
+			where [Order].intOrderID=Company.OrderID order by dteDate desc) <> 'FREELISTINGS'
+			order by Company.CompanyID";
+
+//	return "select
+//		Company.CompanyID as legacy_company_id,
+//		Company.URL as website,
+//		Company.LicenseNo as trading_name,
+//		Company.AdvertisingByline as byline,
+//		(select top 1 ReferralCode.referralCode from [Order]
+//		left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
+//		where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) as referral_code,
+//		IntroTitle as profile_title,
+//		CONVERT(TEXT,MarketingMsg) as profile_description,
+//		(select top 1 Path from LogosAndImages where OwnerID=Profiles.intProfileID) as profile_photo_url
+//		from Profiles
+//		join Company on Company.CompanyID=Profiles.intOwnerID
+//		where (select top 1 ReferralCode.referralCode from [Order]
+//		left outer join ReferralCode on [Order].intReferralCodeID=ReferralCode.intReferralCodeID
+//		where [Order].intMemberid=Profiles.intOwnerID order by dteDate desc) is not null
+//		order by Company.CompanyID";
 
 //return "select
 //			Company.CompanyID as legacy_company_id,
