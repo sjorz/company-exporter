@@ -140,7 +140,7 @@ function toUTF8($v)
 {
     if (isset ($v))
     {
-        $s = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $v);
+        $s = preg_replace('/[\x80-\xFF]/', '', $v);
         return utf8_encode ($s);
     }
     return $v;
